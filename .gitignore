@@ -10,3 +10,5 @@ __pycache__/
 .pytest_cache/
 gfpgan/
 setup.log
+docs/media/demo-raw.webm
+docs/media/demo-marks.json

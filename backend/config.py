@@ -56,5 +56,5 @@ def realesrgan_models_dir() -> Path:
 
 
 # --- Other modules (owned by P3; settings live here so there is one config) --
-GEMMA_MODEL = os.environ.get("REVIVE_GEMMA_MODEL", "gemma3:4b")
+GEMMA_MODEL = os.environ.get("REVIVE_GEMMA_MODEL", "gemma4:e4b-it-qat")
 CAPTION_MAX_SIDE = 1024

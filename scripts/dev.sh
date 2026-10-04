@@ -6,6 +6,7 @@ cd "$(dirname "$0")/.."
 
 PY=python
 if [ -x .venv/bin/python ]; then PY=.venv/bin/python; fi
+if [ -x venv/bin/python ]; then PY=venv/bin/python; fi
 if [ -x .venv/Scripts/python.exe ]; then PY=.venv/Scripts/python.exe; fi
 
 REVIVE_MOCK=1 exec "$PY" -m uvicorn backend.app:app --reload --port 8765 "$@"

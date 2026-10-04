@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Revive – bring old photos back</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <h1 class="brand">Revive</h1>
+      <p class="privacy"><span aria-hidden="true">🔒</span> Your photos stay on this computer.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div id="health-banner" class="banner" role="status" hidden></div>
+    <div id="notice" class="banner banner-warn" role="alert" hidden></div>
+
+    <!-- Step 1: choose photos -->
+    <section id="step-pick" aria-labelledby="pick-title">
+      <h2 id="pick-title" class="sr-only">Choose your photos</h2>
+
+      <div id="dropzone" class="dropzone" tabindex="0" role="button"
+           aria-label="Drop photos or a folder here, or press Enter to choose photos">
+        <div class="dz-icon" aria-hidden="true">🖼️</div>
+        <p class="dz-title">Drop your old photos here</p>
+        <p class="dz-sub" id="dz-sub">Drag in photos or a whole folder. We'll make them sharper, fix faces and write a caption for each one.</p>
+        <div class="dz-buttons">
+          <button type="button" class="btn btn-primary" id="btn-photos">Choose photos</button>
+          <button type="button" class="btn" id="btn-folder">Choose a folder</button>
+        </div>
+        <p class="dz-hint">JPG, PNG or iPhone (HEIC) photos</p>
+        <input type="file" id="input-photos" accept="image/*,.heic,.heif" multiple hidden>
+        <input type="file" id="input-folder" webkitdirectory multiple hidden>
+      </div>
+
+      <details class="how">
+        <summary>How it works</summary>
+        <p>Revive uses open AI models that run right here on this computer. Nothing is uploaded and no internet is needed, so your photos never leave this computer.</p>
+        <ol>
+          <li>Drop in your photos.</li>
+          <li>Pick how much sharper you'd like them.</li>
+          <li>Press Start and let it work. Each photo takes a little while.</li>
+          <li>Look at the before and after, then download your album.</li>
+        </ol>
+      </details>
+
+      <div id="preview" class="preview" hidden>
+        <div class="preview-head">
+          <h3 id="preview-count">0 photos</h3>
+          <button type="button" class="btn btn-quiet" id="btn-clear">Remove all</button>
+        </div>
+        <ul id="preview-strip" class="strip"></ul>
+      </div>
+
+      <fieldset id="options" class="options" hidden>
+        <legend class="sr-only">Options</legend>
+        <div class="opt">
+          <span class="opt-label" id="scale-label">Make sharper</span>
+          <div class="seg" role="radiogroup" aria-labelledby="scale-label">
+            <label><input type="radio" name="scale" value="2"><span>2× <small>a little</small></span></label>
+            <label><input type="radio" name="scale" value="4" checked><span>4× <small>a lot</small></span></label>
+          </div>
+        </div>
+        <label class="opt opt-toggle" id="opt-faces">
+          <span class="opt-label">Fix faces</span>
+          <input type="checkbox" id="faces" class="switch" checked>
+        </label>
+        <label class="opt opt-toggle" id="opt-captions">
+          <span class="opt-label">Write captions</span>
+          <input type="checkbox" id="captions" class="switch" checked>
+        </label>
+      </fieldset>
+
+      <div class="start-row" id="start-row" hidden>
+        <button type="button" class="btn btn-primary btn-big" id="btn-start">Start</button>
+      </div>
+    </section>
+
+    <!-- Step 2: progress -->
+    <section id="step-progress" aria-labelledby="progress-title" hidden>
+      <div class="progress-card">
+        <h2 id="progress-title">Working on your photos</h2>
+        <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="bar">
+          <div class="bar-fill" id="bar-fill"></div>
+        </div>
+        <p class="progress-meta"><span id="progress-count"></span> <span id="progress-eta"></span></p>
+        <p class="progress-note">You can close this tab and come back. We'll keep going.</p>
+      </div>
+      <ul id="progress-list" class="plist"></ul>
+    </section>
+
+    <!-- Step 3: results -->
+    <section id="step-results" aria-labelledby="results-title" hidden>
+      <div class="results-head">
+        <div>
+          <h2 id="results-title">Your photos are ready</h2>
+          <p id="results-sub" class="muted"></p>
+        </div>
+        <div class="results-actions">
+          <a class="btn btn-primary btn-big" id="btn-album" href="#" download>Download album</a>
+          <button type="button" class="btn" id="btn-new">Start a new batch</button>
+        </div>
+      </div>
+      <ul id="results-grid" class="grid"></ul>
+      <h3 id="failed-title" class="failed-title" hidden>These photos couldn't be finished</h3>
+      <ul id="failed-list" class="plist" hidden></ul>
+    </section>
+  </main>
+
+  <!-- Full-screen viewer -->
+  <div id="viewer" class="viewer" role="dialog" aria-modal="true" aria-label="Photo viewer" hidden>
+    <button type="button" class="v-close" id="v-close" aria-label="Close">✕</button>
+    <button type="button" class="v-nav v-prev" id="v-prev" aria-label="Previous photo">‹</button>
+    <button type="button" class="v-nav v-next" id="v-next" aria-label="Next photo">›</button>
+    <div class="v-body">
+      <div id="v-stage" class="v-stage"></div>
+      <p class="v-hint">Drag the line, or use the left and right arrow keys on it.</p>
+      <div class="v-info">
+        <p id="v-meta" class="v-meta"></p>
+        <label class="v-cap-label" for="v-caption">Caption <span class="muted">(you can change it)</span></label>
+        <textarea id="v-caption" rows="2" maxlength="400"></textarea>
+        <p id="v-save" class="muted v-save" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

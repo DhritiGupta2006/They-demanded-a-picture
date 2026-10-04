@@ -122,12 +122,12 @@ def test_patch_caption(client):
     assert client.patch(f"/api/jobs/{job_id}/items/0099", json={"caption": "x"}).status_code == 404
 
 
-def test_album_placeholder_until_p2(client):
+def test_album_route_serves_zip(client):
     r = client.post("/api/jobs", files=[("files", ("x.jpg", _img_bytes(), "image/jpeg"))])
     job_id = r.json()["job_id"]
     _wait(client, job_id)
-    # backend/album/export.py doesn't exist yet (P2); the route must answer calmly.
-    assert client.get(f"/api/jobs/{job_id}/album").status_code == 503
+    r = client.get(f"/api/jobs/{job_id}/album")  # backend/album/export.py (P2) is in
+    assert r.status_code == 200 and r.headers["content-type"] == "application/zip"
 
 
 def test_restart_requeues_unfinished_job(client):

@@ -3,33 +3,67 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f1e6">
   <title>Revive – bring old photos back</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23b5532a'/%3E%3Cpath d='M16 7l2.2 6.3L25 16l-6.8 2.7L16 25l-2.2-6.3L7 16l6.8-2.7z' fill='%23fff'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="i-spark" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"/><path fill="currentColor" d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z" opacity=".7"/></symbol>
+      <symbol id="i-upload" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 16V5m0 0l-4 4m4-4l4 4M5 15v3a2 2 0 002 2h10a2 2 0 002-2v-3"/></symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M6 11h12v9H6zM8 11V8a4 4 0 118 0v3"/></symbol>
+      <symbol id="i-wifi-off" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M3 3l18 18M5 12.5a10 10 0 015-2.6M8.5 16a5 5 0 017 0M12 20h.01M19 12.5a10 10 0 00-6-2.5"/></symbol>
+      <symbol id="i-open" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M8 6l-5 6 5 6M16 6l5 6-5 6M14 4l-4 16"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+      <symbol id="i-folder" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></symbol>
+      <symbol id="i-image" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M4 5h16v14H4zM4 16l5-5 4 4 3-3 4 4M9 9.5h.01"/></symbol>
+      <symbol id="i-download" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 4v11m0 0l-4-4m4 4l4-4M5 19h14"/></symbol>
+      <symbol id="i-expand" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></symbol>
+    </defs>
+  </svg>
+
   <header class="site-header">
-    <div class="wrap">
-      <h1 class="brand">Revive</h1>
-      <p class="privacy"><span aria-hidden="true">🔒</span> Your photos stay on this computer.</p>
+    <div class="wrap bar-row">
+      <a class="brand" href="./" aria-label="Revive home">
+        <span class="logo" aria-hidden="true"><svg><use href="#i-spark"/></svg></span>
+        <span class="brand-name">Revive</span>
+      </a>
+      <p class="privacy"><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg> Your photos stay on this computer.</p>
     </div>
   </header>
 
   <main class="wrap">
+    <ol class="stepper" id="stepper" aria-label="Progress">
+      <li class="is-active" data-step="1"><span class="dot">1</span><span class="lbl">Choose photos</span></li>
+      <li data-step="2"><span class="dot">2</span><span class="lbl">Restoring</span></li>
+      <li data-step="3"><span class="dot">3</span><span class="lbl">Enjoy</span></li>
+    </ol>
+
     <div id="health-banner" class="banner" role="status" hidden></div>
     <div id="notice" class="banner banner-warn" role="alert" hidden></div>
 
     <!-- Step 1: choose photos -->
     <section id="step-pick" aria-labelledby="pick-title">
-      <h2 id="pick-title" class="sr-only">Choose your photos</h2>
+      <div class="hero" id="hero">
+        <h2 id="pick-title">Bring your old photos <em>back to life</em></h2>
+        <p class="lead">Drop in faded, blurry family pictures. Revive makes them sharper, fixes faces and writes a caption for each one.</p>
+        <ul class="chips">
+          <li><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg> Private</li>
+          <li><svg class="ico" aria-hidden="true"><use href="#i-wifi-off"/></svg> Works offline</li>
+          <li><svg class="ico" aria-hidden="true"><use href="#i-open"/></svg> Open-source AI</li>
+        </ul>
+      </div>
 
       <div id="dropzone" class="dropzone" tabindex="0" role="button"
            aria-label="Drop photos or a folder here, or press Enter to choose photos">
-        <div class="dz-icon" aria-hidden="true">🖼️</div>
-        <p class="dz-title">Drop your old photos here</p>
-        <p class="dz-sub" id="dz-sub">Drag in photos or a whole folder. We'll make them sharper, fix faces and write a caption for each one.</p>
+        <div class="dz-icon" aria-hidden="true"><svg><use href="#i-upload"/></svg></div>
+        <p class="dz-title">Drop your photos or a whole folder here</p>
+        <p class="dz-sub" id="dz-sub">or choose them from your computer</p>
         <div class="dz-buttons">
-          <button type="button" class="btn btn-primary" id="btn-photos">Choose photos</button>
-          <button type="button" class="btn" id="btn-folder">Choose a folder</button>
+          <button type="button" class="btn btn-primary" id="btn-photos"><svg class="ico" aria-hidden="true"><use href="#i-image"/></svg> Choose photos</button>
+          <button type="button" class="btn" id="btn-folder"><svg class="ico" aria-hidden="true"><use href="#i-folder"/></svg> Choose a folder</button>
         </div>
         <p class="dz-hint">JPG, PNG or iPhone (HEIC) photos</p>
         <input type="file" id="input-photos" accept="image/*,.heic,.heif" multiple hidden>
@@ -38,16 +72,18 @@
 
       <details class="how">
         <summary>How it works</summary>
-        <p>Revive uses open AI models that run right here on this computer. Nothing is uploaded and no internet is needed, so your photos never leave this computer.</p>
-        <ol>
-          <li>Drop in your photos.</li>
-          <li>Pick how much sharper you'd like them.</li>
-          <li>Press Start and let it work. Each photo takes a little while.</li>
-          <li>Look at the before and after, then download your album.</li>
-        </ol>
+        <div class="how-body">
+          <p>Revive uses open AI models that run right here on this computer. Nothing is uploaded and no internet is needed, so your photos never leave this computer.</p>
+          <ol class="how-steps">
+            <li><b>Drop in</b> your photos or a folder.</li>
+            <li><b>Choose</b> how much sharper you'd like them.</li>
+            <li><b>Press Start</b> and let it work. Each photo takes a little while.</li>
+            <li><b>Compare</b> before and after, then download your album.</li>
+          </ol>
+        </div>
       </details>
 
-      <div id="preview" class="preview" hidden>
+      <div id="preview" class="preview card-panel" hidden>
         <div class="preview-head">
           <h3 id="preview-count">0 photos</h3>
           <button type="button" class="btn btn-quiet" id="btn-clear">Remove all</button>
@@ -55,34 +91,46 @@
         <ul id="preview-strip" class="strip"></ul>
       </div>
 
-      <fieldset id="options" class="options" hidden>
+      <fieldset id="options" class="options card-panel" hidden>
         <legend class="sr-only">Options</legend>
         <div class="opt">
-          <span class="opt-label" id="scale-label">Make sharper</span>
+          <div class="opt-text">
+            <span class="opt-label" id="scale-label">Make sharper</span>
+            <span class="hint">4× brings back the most detail but takes longer</span>
+          </div>
           <div class="seg" role="radiogroup" aria-labelledby="scale-label">
             <label><input type="radio" name="scale" value="2"><span>2× <small>a little</small></span></label>
             <label><input type="radio" name="scale" value="4" checked><span>4× <small>a lot</small></span></label>
           </div>
         </div>
         <label class="opt opt-toggle" id="opt-faces">
-          <span class="opt-label">Fix faces</span>
+          <div class="opt-text">
+            <span class="opt-label">Fix faces</span>
+            <span class="hint">Gently restores blurry or faded faces</span>
+          </div>
           <input type="checkbox" id="faces" class="switch" checked>
         </label>
         <label class="opt opt-toggle" id="opt-captions">
-          <span class="opt-label">Write captions</span>
+          <div class="opt-text">
+            <span class="opt-label">Write captions</span>
+            <span class="hint">A short description and a guess at the decade</span>
+          </div>
           <input type="checkbox" id="captions" class="switch" checked>
         </label>
       </fieldset>
 
       <div class="start-row" id="start-row" hidden>
-        <button type="button" class="btn btn-primary btn-big" id="btn-start">Start</button>
+        <button type="button" class="btn btn-primary btn-big" id="btn-start"><svg class="ico" aria-hidden="true"><use href="#i-spark"/></svg> Start</button>
       </div>
     </section>
 
     <!-- Step 2: progress -->
     <section id="step-progress" aria-labelledby="progress-title" hidden>
       <div class="progress-card">
-        <h2 id="progress-title">Working on your photos</h2>
+        <div class="pc-top">
+          <h2 id="progress-title">Working on your photos</h2>
+          <span class="pct" id="progress-pct" aria-hidden="true">0%</span>
+        </div>
         <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="bar">
           <div class="bar-fill" id="bar-fill"></div>
         </div>
@@ -100,7 +148,7 @@
           <p id="results-sub" class="muted"></p>
         </div>
         <div class="results-actions">
-          <a class="btn btn-primary btn-big" id="btn-album" href="#" download>Download album</a>
+          <a class="btn btn-primary btn-big" id="btn-album" href="#" download><svg class="ico" aria-hidden="true"><use href="#i-download"/></svg> Download album</a>
           <button type="button" class="btn" id="btn-new">Start a new batch</button>
         </div>
       </div>
@@ -109,6 +157,10 @@
       <ul id="failed-list" class="plist" hidden></ul>
     </section>
   </main>
+
+  <footer class="site-footer">
+    <div class="wrap">Revive runs open-source AI right on this computer. Nothing is ever uploaded.</div>
+  </footer>
 
   <!-- Full-screen viewer -->
   <div id="viewer" class="viewer" role="dialog" aria-modal="true" aria-label="Photo viewer" hidden>

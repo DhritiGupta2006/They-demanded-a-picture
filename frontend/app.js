@@ -42,6 +42,25 @@ function el(tag, attrs, ...kids) {
   return node;
 }
 
+const SVG_NS = "http://www.w3.org/2000/svg";
+function icon(name) {
+  const svg = document.createElementNS(SVG_NS, "svg");
+  const use = document.createElementNS(SVG_NS, "use");
+  use.setAttribute("href", "#i-" + name);
+  svg.append(use);
+  svg.setAttribute("aria-hidden", "true");
+  return svg;
+}
+
+function setStep(n) {
+  document.querySelectorAll("#stepper li").forEach((li) => {
+    const i = Number(li.dataset.step);
+    li.classList.toggle("is-active", i === n);
+    li.classList.toggle("is-done", i < n || (n === 3 && i === 3));
+    li.querySelector(".dot").replaceChildren(i < n || (n === 3 && i === 3) ? icon("check") : String(i));
+  });
+}
+
 function plural(n, one, many) { return `${n} ${n === 1 ? one : many}`; }
 
 /* ---------------------------------------------------------------- notices */
@@ -121,6 +140,7 @@ function renderPreview() {
   $("options").hidden = n === 0;
   $("start-row").hidden = n === 0;
   $("dropzone").classList.toggle("is-compact", n > 0);
+  $("step-pick").classList.toggle("has-photos", n > 0);
   $("preview-count").textContent = plural(n, "photo", "photos") + " ready";
   $("preview-strip").replaceChildren(...state.picked.map((p) =>
     el("li", {},
@@ -195,6 +215,7 @@ function setupPicking() {
 async function startJob() {
   if (!state.picked.length) return;
   const btn = $("btn-start");
+  const startLabel = btn.innerHTML;
   btn.disabled = true;
   btn.textContent = "Starting…";
   showNotice("");
@@ -214,7 +235,7 @@ async function startJob() {
       ? err.message
       : "We couldn't start. Is Revive still running? Please try again.");
   } finally {
-    btn.textContent = "Start";
+    btn.innerHTML = startLabel;
     updateStartState();
   }
 }
@@ -239,6 +260,7 @@ function attachToJob(jobId) {
   $("step-results").hidden = true;
   $("step-progress").hidden = false;
   $("progress-list").replaceChildren();
+  setStep(2);
   poll();
 }
 
@@ -274,6 +296,7 @@ function leaveJob(message) {
   $("step-progress").hidden = true;
   $("step-results").hidden = true;
   $("step-pick").hidden = false;
+  setStep(1);
   showNotice(message || "");
   window.scrollTo(0, 0);
 }
@@ -290,6 +313,7 @@ function renderJob(job) {
   }
   $("step-progress").hidden = false;
   $("step-results").hidden = true;
+  setStep(2);
   renderProgress(job);
 }
 
@@ -309,6 +333,7 @@ function renderProgress(job) {
   bar.setAttribute("aria-valuenow", pct);
   bar.classList.toggle("working", job.status === "running" || job.status === "queued");
   $("bar-fill").style.width = `${Math.max(pct, 3)}%`;
+  $("progress-pct").textContent = `${pct}%`;
   $("progress-count").textContent = `${job.done} of ${plural(job.total, "photo", "photos")} finished`;
   $("progress-eta").textContent = etaText(job);
 
@@ -340,8 +365,8 @@ function fillProgressRow(li, item) {
 
   let mark;
   if (active) mark = el("div", { class: "spinner", role: "img", "aria-label": "Working" });
-  else if (item.status === "done") mark = el("div", { class: "tick", "aria-hidden": "true", style: "color:var(--ok)" }, "✓");
-  else if (item.status === "failed") mark = el("div", { class: "tick", "aria-hidden": "true", style: "color:var(--bad)" }, "!");
+  else if (item.status === "done") mark = el("div", { class: "tick ok", "aria-hidden": "true" }, icon("check"));
+  else if (item.status === "failed") mark = el("div", { class: "tick bad", "aria-hidden": "true" }, "!");
   else mark = el("div", { class: "tick", "aria-hidden": "true" }, "");
   li.replaceChildren(thumb, name, mark);
 }
@@ -354,6 +379,7 @@ function renderResults(job) {
   stopPolling();
   $("step-progress").hidden = true;
   $("step-results").hidden = false;
+  setStep(3);
 
   const good = job.items.filter(hasResult);
   const bad = job.items.filter((it) => it.status === "failed");
@@ -384,10 +410,11 @@ function resultCard(item, index) {
   const label = item.caption ? `Compare before and after: ${item.caption}` : `Compare before and after: ${item.filename}`;
   return el("li", { class: "card", "data-id": item.id },
     el("button", { type: "button", class: "open", "aria-label": label, onclick: (e) => openViewer(index, e.currentTarget) },
-      el("img", { src: item.result_url, alt: item.caption || item.filename, loading: "lazy" })),
+      el("img", { src: item.result_url, alt: item.caption || item.filename, loading: "lazy" }),
+      item.decade ? el("span", { class: "dec-badge" }, item.decade) : null,
+      el("span", { class: "cover", "aria-hidden": "true" }, el("span", {}, icon("expand"), "Compare"))),
     el("div", { class: "cbody" },
       item.caption ? el("p", { class: "ccap" }, item.caption) : null,
-      item.decade ? el("p", { class: "cdec" }, item.decade) : null,
       el("p", { class: "cname", title: item.filename }, item.filename)));
 }
 
@@ -403,7 +430,7 @@ function makeSlider(beforeUrl, afterUrl, altText) {
   },
   after, before,
   el("div", { class: "ba-line" }),
-  el("div", { class: "ba-knob", "aria-hidden": "true" }, "↔"),
+  el("div", { class: "ba-knob", "aria-hidden": "true" }, "‹›"),
   el("span", { class: "ba-tag ba-tag-l" }, "Before"),
   el("span", { class: "ba-tag ba-tag-r" }, "After"));
 
@@ -559,6 +586,7 @@ function boot() {
     if (id && id !== state.jobId) attachToJob(id);
   });
   renderPreview();
+  setStep(1);
   loadHealth();
   const id = jobIdFromHash();
   if (id) attachToJob(id);
